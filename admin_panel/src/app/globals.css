@@ -1,20 +1,67 @@
 @import "tailwindcss";
 
 @layer base {
-  :root {
+  :root, .dark {
     --bg-main: #0B0F19;
+    --bg-sidebar: #131B2E;
+    --bg-header: #131B2E;
     --bg-card: #131B2E;
     --border-card: #1E293B;
-    --accent-amber: #F59E0B;
+    --bg-input: #0B0F19;
     --text-main: #F8FAFC;
     --text-muted: #94A3B8;
+    --bg-table-header: #0B0F19;
+    --bg-hover: #1E293B;
+  }
+
+  .light {
+    --bg-main: #F8FAFC;
+    --bg-sidebar: #FFFFFF;
+    --bg-header: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --border-card: #E2E8F0;
+    --bg-input: #F1F5F9;
+    --text-main: #0F172A;
+    --text-muted: #64748B;
+    --bg-table-header: #F1F5F9;
+    --bg-hover: #F8FAFC;
   }
 
   body {
     background-color: var(--bg-main);
     color: var(--text-main);
-    font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+    font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
+}
+
+/* Custom Theme Utility Classes */
+.bg-theme-main {
+  background-color: var(--bg-main);
+}
+.bg-theme-card {
+  background-color: var(--bg-card);
+}
+.bg-theme-header {
+  background-color: var(--bg-header);
+}
+.bg-theme-sidebar {
+  background-color: var(--bg-sidebar);
+}
+.bg-theme-input {
+  background-color: var(--bg-input);
+}
+.bg-theme-table-header {
+  background-color: var(--bg-table-header);
+}
+.border-theme {
+  border-color: var(--border-card);
+}
+.text-theme-main {
+  color: var(--text-main);
+}
+.text-theme-muted {
+  color: var(--text-muted);
 }
 
 /* Custom Scrollbar */
@@ -23,10 +70,10 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0B0F19;
+  background: var(--bg-main);
 }
 ::-webkit-scrollbar-thumb {
-  background: #1E293B;
+  background: var(--border-card);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -34,9 +81,9 @@
 }
 
 .font-space {
-  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-family: var(--font-space-grotesk), 'Space Grotesk', system-ui, sans-serif;
 }
 
 .font-mono-code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
 }

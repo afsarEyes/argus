@@ -35,18 +35,18 @@ export default function Sidebar() {
   const { userProfile, signOut } = useAuth();
 
   return (
-    <aside className="w-64 bg-[#131B2E] border-r border-[#1E293B] flex flex-col justify-between h-screen sticky top-0">
+    <aside className="w-64 bg-theme-sidebar border-r border-theme flex flex-col justify-between h-screen sticky top-0 transition-colors">
       <div>
         {/* Brand Header */}
-        <div className="p-6 border-b border-[#1E293B] flex items-center gap-3">
+        <div className="p-6 border-b border-theme flex items-center gap-3">
           <div className="p-2 bg-[#F59E0B]/10 border border-[#F59E0B]/30 rounded-lg text-[#F59E0B]">
             <ShieldCheck size={24} />
           </div>
           <div>
-            <h1 className="font-space font-bold text-lg text-slate-100 tracking-wider">
+            <h1 className="font-space font-bold text-lg text-theme-main tracking-wider">
               ARGUS <span className="text-[#F59E0B]">{'//'}</span> WEB
             </h1>
-            <p className="text-xs text-slate-400 font-mono">QC CONTROL CENTER</p>
+            <p className="text-xs text-theme-muted font-mono">QC CONTROL CENTER</p>
           </div>
         </div>
 
@@ -63,7 +63,7 @@ export default function Sidebar() {
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all ${
                   isActive
                     ? 'bg-[#F59E0B] text-slate-950 font-bold shadow-md shadow-[#F59E0B]/10'
-                    : 'text-slate-300 hover:bg-[#1E293B] hover:text-slate-100'
+                    : 'text-theme-muted hover:bg-theme-input hover:text-theme-main'
                 }`}
               >
                 <Icon size={18} className={isActive ? 'text-slate-950' : 'text-[#F59E0B]'} />
@@ -75,10 +75,10 @@ export default function Sidebar() {
       </div>
 
       {/* User Footer Profile */}
-      <div className="p-4 border-t border-[#1E293B] bg-[#0B0F19]/40">
+      <div className="p-4 border-t border-theme bg-theme-main/50">
         <div className="flex items-center justify-between">
           <div className="overflow-hidden">
-            <p className="text-sm font-semibold text-slate-200 truncate">
+            <p className="text-sm font-semibold text-theme-main truncate">
               {userProfile?.name || 'Operator'}
             </p>
             <span className="inline-block px-2 py-0.5 mt-0.5 text-[10px] font-mono font-semibold uppercase bg-[#F59E0B]/10 border border-[#F59E0B]/30 text-[#F59E0B] rounded">
@@ -89,7 +89,7 @@ export default function Sidebar() {
           <button
             onClick={signOut}
             title="Sign Out"
-            className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-950/30 rounded-md transition-colors"
+            className="p-2 text-theme-muted hover:text-red-500 hover:bg-red-500/10 rounded-md transition-colors"
           >
             <LogOut size={18} />
           </button>

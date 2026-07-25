@@ -114,7 +114,7 @@ export default function RoutingRulesPage() {
     try {
       await supabase.from('assignment_rules').delete().eq('id', id);
       loadData();
-    } catch (err) {
+    } catch {
       alert('Failed to delete rule');
     }
   };
@@ -125,10 +125,10 @@ export default function RoutingRulesPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
           <div>
-            <h1 className="font-space font-bold text-2xl text-slate-100 tracking-wide">
+            <h1 className="font-space font-bold text-2xl text-theme-main tracking-wide">
               AUTOMATED ROUTING ENGINE
             </h1>
-            <p className="text-xs text-slate-400 font-mono mt-1">
+            <p className="text-xs text-theme-muted font-mono mt-1">
               Configure automatic ticket resolution assignments based on line, defect category, and shift slots
             </p>
           </div>
@@ -142,43 +142,43 @@ export default function RoutingRulesPage() {
         </div>
 
         {/* Rules Table */}
-        <div className="bg-[#131B2E] border border-[#1E293B] rounded-xl overflow-hidden shadow-xl">
-          <table className="w-full text-left text-sm text-slate-300">
-            <thead className="bg-[#0B0F19] text-xs font-mono uppercase text-slate-400 border-b border-[#1E293B]">
+        <div className="bg-theme-card border border-theme rounded-xl overflow-hidden shadow-xl">
+          <table className="w-full text-left text-sm text-theme-main">
+            <thead className="bg-theme-table-header text-xs font-mono uppercase text-theme-muted border-b border-theme">
               <tr>
                 <th className="px-6 py-3.5">Trigger Condition (Line / Category / Shift)</th>
                 <th className="px-6 py-3.5">Routing Target</th>
                 <th className="px-6 py-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#1E293B]">
+            <tbody className="divide-y divide-theme">
               {loading ? (
                 <tr>
-                  <td colSpan={3} className="text-center py-8 text-xs font-mono text-slate-500">
+                  <td colSpan={3} className="text-center py-8 text-xs font-mono text-theme-muted">
                     Loading routing rules...
                   </td>
                 </tr>
               ) : rules.length === 0 ? (
                 <tr>
-                  <td colSpan={3} className="text-center py-8 text-xs font-mono text-slate-500">
+                  <td colSpan={3} className="text-center py-8 text-xs font-mono text-theme-muted">
                     No automated routing rules configured.
                   </td>
                 </tr>
               ) : (
                 rules.map((r) => (
-                  <tr key={r.id} className="hover:bg-[#1E293B]/40">
+                  <tr key={r.id} className="hover:bg-theme-input/50">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="p-2 bg-[#F59E0B]/10 rounded border border-[#F59E0B]/30 text-[#F59E0B]">
                           <GitMerge size={16} />
                         </div>
                         <div>
-                          <p className="font-semibold text-slate-100">{r.line?.name || 'Any Line'}</p>
+                          <p className="font-semibold text-theme-main">{r.line?.name || 'Any Line'}</p>
                           <div className="flex items-center gap-2 mt-1">
-                            <span className="text-xs font-mono text-slate-400">
-                              Category: <strong className="text-slate-200">{r.defect_category?.name || 'Wildcard (Any Defect)'}</strong>
+                            <span className="text-xs font-mono text-theme-muted">
+                              Category: <strong className="text-theme-main">{r.defect_category?.name || 'Wildcard (Any Defect)'}</strong>
                             </span>
-                            <span className="text-xs font-mono px-1.5 py-0.5 bg-[#0B0F19] rounded border border-slate-700 text-slate-400">
+                            <span className="text-xs font-mono px-1.5 py-0.5 bg-theme-input rounded border border-theme text-theme-muted">
                               Shift: {r.shift || 'All Shifts'}
                             </span>
                           </div>
@@ -188,14 +188,14 @@ export default function RoutingRulesPage() {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <ArrowRight size={16} className="text-[#F59E0B]" />
-                        <span className="font-semibold text-slate-100">{r.assigned_owner?.name || 'Owner User'}</span>
-                        <span className="text-xs font-mono text-slate-400">({r.assigned_owner?.email})</span>
+                        <span className="font-semibold text-theme-main">{r.assigned_owner?.name || 'Owner User'}</span>
+                        <span className="text-xs font-mono text-theme-muted">({r.assigned_owner?.email})</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <button
                         onClick={() => handleDelete(r.id)}
-                        className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-950/30 rounded transition-colors"
+                        className="p-1.5 text-theme-muted hover:text-red-500 hover:bg-red-500/10 rounded transition-colors"
                       >
                         <Trash2 size={16} />
                       </button>
@@ -210,16 +210,16 @@ export default function RoutingRulesPage() {
         {/* Modal */}
         {isModalOpen && (
           <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-[#131B2E] border border-[#1E293B] w-full max-w-md rounded-xl p-6 space-y-4">
-              <h2 className="font-space font-bold text-lg text-slate-100">Create Automatic Routing Rule</h2>
+            <div className="bg-theme-card border border-theme w-full max-w-md rounded-xl p-6 space-y-4 shadow-2xl">
+              <h2 className="font-space font-bold text-lg text-theme-main">Create Automatic Routing Rule</h2>
 
               <form onSubmit={handleCreate} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-mono text-slate-400 mb-1 uppercase">Target Line</label>
+                  <label className="block text-xs font-mono text-theme-muted mb-1 uppercase">Target Line</label>
                   <select
                     value={lineId}
                     onChange={(e) => setLineId(e.target.value)}
-                    className="w-full bg-[#0B0F19] border border-[#1E293B] focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none"
+                    className="w-full bg-theme-input border border-theme focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-theme-main focus:outline-none"
                   >
                     {lines.map((l) => (
                       <option key={l.id} value={l.id}>
@@ -230,11 +230,11 @@ export default function RoutingRulesPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono text-slate-400 mb-1 uppercase">Defect Category Filter</label>
+                  <label className="block text-xs font-mono text-theme-muted mb-1 uppercase">Defect Category Filter</label>
                   <select
                     value={categoryId}
                     onChange={(e) => setCategoryId(e.target.value)}
-                    className="w-full bg-[#0B0F19] border border-[#1E293B] focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none"
+                    className="w-full bg-theme-input border border-theme focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-theme-main focus:outline-none"
                   >
                     <option value="">Wildcard (Match Any Category on Line)</option>
                     {categories.map((c) => (
@@ -246,11 +246,11 @@ export default function RoutingRulesPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono text-slate-400 mb-1 uppercase">Shift Filter</label>
+                  <label className="block text-xs font-mono text-theme-muted mb-1 uppercase">Shift Filter</label>
                   <select
                     value={shift}
                     onChange={(e) => setShift(e.target.value as 'A' | 'B' | 'C' | '')}
-                    className="w-full bg-[#0B0F19] border border-[#1E293B] focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none"
+                    className="w-full bg-theme-input border border-theme focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-theme-main focus:outline-none"
                   >
                     <option value="">Wildcard (All Shifts)</option>
                     <option value="A">Shift A</option>
@@ -260,11 +260,11 @@ export default function RoutingRulesPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono text-slate-400 mb-1 uppercase">Auto-Assign To Lead Owner</label>
+                  <label className="block text-xs font-mono text-theme-muted mb-1 uppercase">Auto-Assign To Lead Owner</label>
                   <select
                     value={assignedOwnerId}
                     onChange={(e) => setAssignedOwnerId(e.target.value)}
-                    className="w-full bg-[#0B0F19] border border-[#1E293B] focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none"
+                    className="w-full bg-theme-input border border-theme focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-theme-main focus:outline-none"
                   >
                     {users.map((u) => (
                       <option key={u.id} value={u.id}>
@@ -274,11 +274,11 @@ export default function RoutingRulesPage() {
                   </select>
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4 border-t border-[#1E293B]">
+                <div className="flex justify-end gap-3 pt-4 border-t border-theme">
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
-                    className="px-4 py-2 bg-[#1E293B] text-slate-300 text-sm font-medium rounded-lg"
+                    className="px-4 py-2 bg-theme-input text-theme-main text-sm font-medium rounded-lg hover:bg-theme-main"
                   >
                     Cancel
                   </button>

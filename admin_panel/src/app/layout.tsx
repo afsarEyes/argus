@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Space_Grotesk, Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
+import { ThemeProvider } from '@/context/ThemeContext';
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -33,8 +34,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="bg-[#0B0F19] text-slate-100 antialiased min-h-screen">
-        <AuthProvider>{children}</AuthProvider>
+      <body className="bg-theme-main text-theme-main antialiased min-h-screen">
+        <ThemeProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import AdminDashboardLayout from '@/components/layout/AdminDashboardLayout';
 import { supabase } from '@/lib/supabase';
 import { Ticket, Line, DefectCategory } from '@/types/database';
+import { useTheme } from '@/context/ThemeContext';
 import {
   Ticket as TicketIcon,
   AlertTriangle,
@@ -32,23 +33,7 @@ export default function DashboardPage() {
   const [categories, setCategories] = useState<DefectCategory[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadData = useCallback(async () => {
-    try {
-      const [ticketsRes, linesRes, catRes] = await Promise.all([
-        supabase.from('tickets').select('*'),
-        supabase.from('lines').select('*'),
-        supabase.from('defect_categories').select('*'),
-      ]);
-
-      setTickets((ticketsRes.data as Ticket[]) || []);
-      setLines((linesRes.data as Line[]) || []);
-      setCategories((catRes.data as DefectCategory[]) || []);
-    } catch (err) {
-      console.error('Failed to load dashboard metrics:', err);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const { theme } = useTheme();
 
   useEffect(() => {
     let isMounted = true;
@@ -114,20 +99,24 @@ export default function DashboardPage() {
     return { name: cat.name, count };
   }).filter((c) => c.count > 0);
 
+  const tooltipBg = theme === 'dark' ? '#0B0F19' : '#FFFFFF';
+  const tooltipText = theme === 'dark' ? '#F8FAFC' : '#0F172A';
+  const tooltipBorder = theme === 'dark' ? '#1E293B' : '#E2E8F0';
+
   return (
     <AdminDashboardLayout>
       <div className="space-y-6">
         {/* Page Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="font-space font-bold text-2xl text-slate-100 tracking-wide">
+            <h1 className="font-space font-bold text-2xl text-theme-main tracking-wide">
               OPERATIONAL ANALYTICS DASHBOARD
             </h1>
-            <p className="text-xs text-slate-400 font-mono mt-1">
+            <p className="text-xs text-theme-muted font-mono mt-1">
               Real-time plant issue tracking & SLA breach performance
             </p>
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-[#131B2E] border border-[#1E293B] rounded-lg text-xs font-mono text-slate-300">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-theme-card border border-theme rounded-lg text-xs font-mono text-theme-main">
             <Activity size={14} className="text-[#F59E0B]" />
             <span>LIVE DATABASE MONITORING</span>
           </div>
@@ -135,19 +124,19 @@ export default function DashboardPage() {
 
         {/* KPI Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-[#131B2E] border border-[#1E293B] p-5 rounded-xl flex items-center justify-between">
+          <div className="bg-theme-card border border-theme p-5 rounded-xl flex items-center justify-between shadow-sm">
             <div>
-              <p className="text-xs font-mono text-slate-400 uppercase">Total Tickets Logged</p>
-              <h3 className="font-space font-bold text-3xl text-slate-100 mt-1">{totalTickets}</h3>
+              <p className="text-xs font-mono text-theme-muted uppercase">Total Tickets Logged</p>
+              <h3 className="font-space font-bold text-3xl text-theme-main mt-1">{totalTickets}</h3>
             </div>
-            <div className="p-3 bg-blue-950/40 border border-blue-800/40 rounded-xl text-blue-400">
+            <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-xl text-blue-500">
               <TicketIcon size={24} />
             </div>
           </div>
 
-          <div className="bg-[#131B2E] border border-[#1E293B] p-5 rounded-xl flex items-center justify-between">
+          <div className="bg-theme-card border border-theme p-5 rounded-xl flex items-center justify-between shadow-sm">
             <div>
-              <p className="text-xs font-mono text-slate-400 uppercase">Active Floor Issues</p>
+              <p className="text-xs font-mono text-theme-muted uppercase">Active Floor Issues</p>
               <h3 className="font-space font-bold text-3xl text-[#F59E0B] mt-1">{openTickets}</h3>
             </div>
             <div className="p-3 bg-[#F59E0B]/10 border border-[#F59E0B]/30 rounded-xl text-[#F59E0B]">
@@ -155,23 +144,23 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="bg-[#131B2E] border border-[#1E293B] p-5 rounded-xl flex items-center justify-between">
+          <div className="bg-theme-card border border-theme p-5 rounded-xl flex items-center justify-between shadow-sm">
             <div>
-              <p className="text-xs font-mono text-slate-400 uppercase">SLA Breach Rate</p>
-              <h3 className="font-space font-bold text-3xl text-red-400 mt-1">{breachRate}%</h3>
-              <p className="text-[10px] text-slate-500 font-mono mt-0.5">{breachedCount} tickets overdue</p>
+              <p className="text-xs font-mono text-theme-muted uppercase">SLA Breach Rate</p>
+              <h3 className="font-space font-bold text-3xl text-red-500 mt-1">{breachRate}%</h3>
+              <p className="text-[10px] text-theme-muted font-mono mt-0.5">{breachedCount} tickets overdue</p>
             </div>
-            <div className="p-3 bg-red-950/40 border border-red-800/40 rounded-xl text-red-400">
+            <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-500">
               <AlertTriangle size={24} />
             </div>
           </div>
 
-          <div className="bg-[#131B2E] border border-[#1E293B] p-5 rounded-xl flex items-center justify-between">
+          <div className="bg-theme-card border border-theme p-5 rounded-xl flex items-center justify-between shadow-sm">
             <div>
-              <p className="text-xs font-mono text-slate-400 uppercase">Resolved & Closed</p>
-              <h3 className="font-space font-bold text-3xl text-emerald-400 mt-1">{resolvedTickets}</h3>
+              <p className="text-xs font-mono text-theme-muted uppercase">Resolved & Closed</p>
+              <h3 className="font-space font-bold text-3xl text-emerald-500 mt-1">{resolvedTickets}</h3>
             </div>
-            <div className="p-3 bg-emerald-950/40 border border-emerald-800/40 rounded-xl text-emerald-400">
+            <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-500">
               <CheckCircle2 size={24} />
             </div>
           </div>
@@ -180,24 +169,24 @@ export default function DashboardPage() {
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Bar Chart: Tickets per Production Line */}
-          <div className="lg:col-span-2 bg-[#131B2E] border border-[#1E293B] p-6 rounded-xl space-y-4">
+          <div className="lg:col-span-2 bg-theme-card border border-theme p-6 rounded-xl space-y-4 shadow-sm">
             <div className="flex items-center justify-between">
-              <h2 className="font-space font-bold text-slate-200 tracking-wide flex items-center gap-2">
+              <h2 className="font-space font-bold text-theme-main tracking-wide flex items-center gap-2">
                 <TrendingUp size={18} className="text-[#F59E0B]" />
                 <span>Ticketing Volume by Production Line</span>
               </h2>
-              <span className="text-xs font-mono text-slate-500">Live Breakdown</span>
+              <span className="text-xs font-mono text-theme-muted">Live Breakdown</span>
             </div>
             <div className="h-64 w-full">
               {loading ? (
-                <div className="h-full flex items-center justify-center text-xs text-slate-500 font-mono">Loading chart...</div>
+                <div className="h-full flex items-center justify-center text-xs text-theme-muted font-mono">Loading chart...</div>
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={lineChartData}>
-                    <XAxis dataKey="name" stroke="#64748B" fontSize={11} />
-                    <YAxis stroke="#64748B" fontSize={11} />
+                    <XAxis dataKey="name" stroke={theme === 'dark' ? '#64748B' : '#94A3B8'} fontSize={11} />
+                    <YAxis stroke={theme === 'dark' ? '#64748B' : '#94A3B8'} fontSize={11} />
                     <Tooltip
-                      contentStyle={{ backgroundColor: '#0B0F19', borderColor: '#1E293B', color: '#F8FAFC' }}
+                      contentStyle={{ backgroundColor: tooltipBg, borderColor: tooltipBorder, color: tooltipText }}
                     />
                     <Bar dataKey="tickets" fill="#F59E0B" radius={[4, 4, 0, 0]} />
                   </BarChart>
@@ -207,11 +196,11 @@ export default function DashboardPage() {
           </div>
 
           {/* Pie Chart: Defect Categories */}
-          <div className="bg-[#131B2E] border border-[#1E293B] p-6 rounded-xl space-y-4">
-            <h2 className="font-space font-bold text-slate-200 tracking-wide">Defect Taxonomy Distribution</h2>
+          <div className="bg-theme-card border border-theme p-6 rounded-xl space-y-4 shadow-sm">
+            <h2 className="font-space font-bold text-theme-main tracking-wide">Defect Taxonomy Distribution</h2>
             <div className="h-64 w-full flex items-center justify-center">
               {loading ? (
-                <div className="text-xs text-slate-500 font-mono">Loading taxonomy...</div>
+                <div className="text-xs text-theme-muted font-mono">Loading taxonomy...</div>
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -229,7 +218,7 @@ export default function DashboardPage() {
                       ))}
                     </Pie>
                     <Tooltip
-                      contentStyle={{ backgroundColor: '#0B0F19', borderColor: '#1E293B', color: '#F8FAFC' }}
+                      contentStyle={{ backgroundColor: tooltipBg, borderColor: tooltipBorder, color: tooltipText }}
                     />
                   </PieChart>
                 </ResponsiveContainer>

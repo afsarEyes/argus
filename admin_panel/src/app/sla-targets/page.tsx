@@ -85,10 +85,10 @@ export default function SlaTargetsPage() {
       <div className="space-y-6 max-w-4xl">
         {/* Header */}
         <div>
-          <h1 className="font-space font-bold text-2xl text-slate-100 tracking-wide">
+          <h1 className="font-space font-bold text-2xl text-theme-main tracking-wide">
             SLA TARGET MANAGER
           </h1>
-          <p className="text-xs text-slate-400 font-mono mt-1">
+          <p className="text-xs text-theme-muted font-mono mt-1">
             Configure target resolution times (in minutes) for each defect severity level
           </p>
         </div>
@@ -96,14 +96,14 @@ export default function SlaTargetsPage() {
         {/* SLA Form */}
         <form onSubmit={handleSave} className="space-y-4">
           {/* Critical */}
-          <div className="bg-[#131B2E] border border-red-800/40 p-6 rounded-xl flex items-center justify-between">
+          <div className="bg-theme-card border border-red-500/30 p-6 rounded-xl flex items-center justify-between shadow-sm">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-red-950/40 border border-red-800/40 rounded-xl text-red-400">
+              <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-500">
                 <ShieldAlert size={24} />
               </div>
               <div>
-                <h3 className="font-space font-bold text-lg text-slate-100 uppercase">Critical Severity</h3>
-                <p className="text-xs text-slate-400 font-mono">Immediate line shutdown or severe safety defect</p>
+                <h3 className="font-space font-bold text-lg text-theme-main uppercase">Critical Severity</h3>
+                <p className="text-xs text-theme-muted font-mono">Immediate line shutdown or severe safety defect</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -113,21 +113,21 @@ export default function SlaTargetsPage() {
                 max={480}
                 value={criticalTime}
                 onChange={(e) => setCriticalTime(Number(e.target.value))}
-                className="w-28 bg-[#0B0F19] border border-[#1E293B] focus:border-red-500 rounded-lg px-3 py-2 text-sm font-mono text-right text-slate-100 font-bold"
+                className="w-28 bg-theme-input border border-theme focus:border-red-500 rounded-lg px-3 py-2 text-sm font-mono text-right text-theme-main font-bold"
               />
-              <span className="text-xs font-mono text-slate-400">minutes</span>
+              <span className="text-xs font-mono text-theme-muted">minutes</span>
             </div>
           </div>
 
           {/* Major */}
-          <div className="bg-[#131B2E] border border-[#F59E0B]/30 p-6 rounded-xl flex items-center justify-between">
+          <div className="bg-theme-card border border-[#F59E0B]/30 p-6 rounded-xl flex items-center justify-between shadow-sm">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-[#F59E0B]/10 border border-[#F59E0B]/30 rounded-xl text-[#F59E0B]">
                 <Clock size={24} />
               </div>
               <div>
-                <h3 className="font-space font-bold text-lg text-slate-100 uppercase">Major Severity</h3>
-                <p className="text-xs text-slate-400 font-mono">High defect rate or component mismatch</p>
+                <h3 className="font-space font-bold text-lg text-theme-main uppercase">Major Severity</h3>
+                <p className="text-xs text-theme-muted font-mono">High defect rate or component mismatch</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -137,21 +137,21 @@ export default function SlaTargetsPage() {
                 max={480}
                 value={majorTime}
                 onChange={(e) => setMajorTime(Number(e.target.value))}
-                className="w-28 bg-[#0B0F19] border border-[#1E293B] focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm font-mono text-right text-slate-100 font-bold"
+                className="w-28 bg-theme-input border border-theme focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm font-mono text-right text-theme-main font-bold"
               />
-              <span className="text-xs font-mono text-slate-400">minutes</span>
+              <span className="text-xs font-mono text-theme-muted">minutes</span>
             </div>
           </div>
 
           {/* Minor */}
-          <div className="bg-[#131B2E] border border-blue-800/40 p-6 rounded-xl flex items-center justify-between">
+          <div className="bg-theme-card border border-blue-500/30 p-6 rounded-xl flex items-center justify-between shadow-sm">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-blue-950/40 border border-blue-800/40 rounded-xl text-blue-400">
+              <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-xl text-blue-500">
                 <Clock size={24} />
               </div>
               <div>
-                <h3 className="font-space font-bold text-lg text-slate-100 uppercase">Minor Severity</h3>
-                <p className="text-xs text-slate-400 font-mono">Cosmetic scratch or minor label flaw</p>
+                <h3 className="font-space font-bold text-lg text-theme-main uppercase">Minor Severity</h3>
+                <p className="text-xs text-theme-muted font-mono">Cosmetic scratch or minor label flaw</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -161,9 +161,9 @@ export default function SlaTargetsPage() {
                 max={480}
                 value={minorTime}
                 onChange={(e) => setMinorTime(Number(e.target.value))}
-                className="w-28 bg-[#0B0F19] border border-[#1E293B] focus:border-blue-500 rounded-lg px-3 py-2 text-sm font-mono text-right text-slate-100 font-bold"
+                className="w-28 bg-theme-input border border-theme focus:border-blue-500 rounded-lg px-3 py-2 text-sm font-mono text-right text-theme-main font-bold"
               />
-              <span className="text-xs font-mono text-slate-400">minutes</span>
+              <span className="text-xs font-mono text-theme-muted">minutes</span>
             </div>
           </div>
 

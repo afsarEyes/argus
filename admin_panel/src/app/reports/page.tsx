@@ -131,19 +131,19 @@ export default function ReportsExportPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
           <div>
-            <h1 className="font-space font-bold text-2xl text-slate-100 tracking-wide">
+            <h1 className="font-space font-bold text-2xl text-theme-main tracking-wide">
               REPORTS & AUDIT EXPORT CENTER
             </h1>
-            <p className="text-xs text-slate-400 font-mono mt-1">
+            <p className="text-xs text-theme-muted font-mono mt-1">
               Generate CSV logs and printable executive PDF summaries for shift audits and ISO compliance
             </p>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={exportToCSV}
-              className="flex items-center gap-2 bg-[#1E293B] hover:bg-slate-700 text-slate-100 border border-slate-700 px-4 py-2.5 rounded-lg text-sm font-mono transition-all"
+              className="flex items-center gap-2 bg-theme-card hover:bg-theme-input text-theme-main border border-theme px-4 py-2.5 rounded-lg text-sm font-mono transition-all"
             >
-              <FileSpreadsheet size={16} className="text-emerald-400" />
+              <FileSpreadsheet size={16} className="text-emerald-500" />
               <span>Export CSV</span>
             </button>
             <button
@@ -157,14 +157,14 @@ export default function ReportsExportPage() {
         </div>
 
         {/* Filter Controls */}
-        <div className="bg-[#131B2E] border border-[#1E293B] p-4 rounded-xl flex flex-wrap gap-4 items-center">
+        <div className="bg-theme-card border border-theme p-4 rounded-xl flex flex-wrap gap-4 items-center">
           <div className="flex items-center gap-2">
             <Calendar size={16} className="text-[#F59E0B]" />
-            <span className="text-xs font-mono text-slate-400">TIMEFRAME:</span>
+            <span className="text-xs font-mono text-theme-muted">TIMEFRAME:</span>
             <select
               value={datePreset}
               onChange={(e) => setDatePreset(e.target.value as 'all' | 'today' | 'week' | 'month')}
-              className="bg-[#0B0F19] border border-[#1E293B] rounded-lg px-3 py-1.5 text-xs text-slate-200"
+              className="bg-theme-input border border-theme rounded-lg px-3 py-1.5 text-xs text-theme-main"
             >
               <option value="all">All Available History</option>
               <option value="today">Today Only</option>
@@ -175,11 +175,11 @@ export default function ReportsExportPage() {
 
           <div className="flex items-center gap-2">
             <Filter size={16} className="text-[#F59E0B]" />
-            <span className="text-xs font-mono text-slate-400">LINE:</span>
+            <span className="text-xs font-mono text-theme-muted">LINE:</span>
             <select
               value={selectedLineId}
               onChange={(e) => setSelectedLineId(e.target.value)}
-              className="bg-[#0B0F19] border border-[#1E293B] rounded-lg px-3 py-1.5 text-xs text-slate-200"
+              className="bg-theme-input border border-theme rounded-lg px-3 py-1.5 text-xs text-theme-main"
             >
               <option value="ALL">All Production Lines</option>
               {lines.map((l) => (
@@ -191,11 +191,11 @@ export default function ReportsExportPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono text-slate-400">SEVERITY:</span>
+            <span className="text-xs font-mono text-theme-muted">SEVERITY:</span>
             <select
               value={selectedSeverity}
               onChange={(e) => setSelectedSeverity(e.target.value)}
-              className="bg-[#0B0F19] border border-[#1E293B] rounded-lg px-3 py-1.5 text-xs text-slate-200"
+              className="bg-theme-input border border-theme rounded-lg px-3 py-1.5 text-xs text-theme-main"
             >
               <option value="ALL">All Severities</option>
               <option value="critical">Critical Only</option>
@@ -206,22 +206,22 @@ export default function ReportsExportPage() {
         </div>
 
         {/* Printable Summary Report Container */}
-        <div ref={reportRef} className="bg-[#131B2E] border border-[#1E293B] p-6 rounded-xl space-y-6">
-          <div className="border-b border-[#1E293B] pb-4 flex justify-between items-end">
+        <div ref={reportRef} className="bg-theme-card border border-theme p-6 rounded-xl space-y-6">
+          <div className="border-b border-theme pb-4 flex justify-between items-end">
             <div>
-              <h2 className="font-space font-bold text-xl text-slate-100 tracking-wide">
+              <h2 className="font-space font-bold text-xl text-theme-main tracking-wide">
                 ARGUS QC EXECUTIVE AUDIT REPORT
               </h2>
               <p className="text-xs text-[#F59E0B] font-mono">Generated: {new Date().toLocaleString()}</p>
             </div>
-            <span className="text-xs font-mono px-3 py-1 bg-[#0B0F19] border border-slate-700 rounded text-slate-300">
+            <span className="text-xs font-mono px-3 py-1 bg-theme-input border border-theme rounded text-theme-main">
               Filtered Records: {filteredTickets.length}
             </span>
           </div>
 
           {/* Report Data Preview Table */}
-          <table className="w-full text-left text-xs font-mono text-slate-300">
-            <thead className="bg-[#0B0F19] uppercase text-slate-400 border-b border-[#1E293B]">
+          <table className="w-full text-left text-xs font-mono text-theme-main">
+            <thead className="bg-theme-table-header uppercase text-theme-muted border-b border-theme">
               <tr>
                 <th className="p-3">ID</th>
                 <th className="p-3">Date</th>
@@ -231,26 +231,26 @@ export default function ReportsExportPage() {
                 <th className="p-3">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#1E293B]">
+            <tbody className="divide-y divide-theme">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-6 text-slate-500">
+                  <td colSpan={6} className="text-center py-6 text-theme-muted">
                     Preparing report contents...
                   </td>
                 </tr>
               ) : filteredTickets.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-6 text-slate-500">
+                  <td colSpan={6} className="text-center py-6 text-theme-muted">
                     No tickets match criteria.
                   </td>
                 </tr>
               ) : (
                 filteredTickets.map((t) => (
-                  <tr key={t.id} className="hover:bg-[#1E293B]/40">
-                    <td className="p-3 font-bold text-slate-100">{t.human_readable_id || t.id.substring(0, 8)}</td>
-                    <td className="p-3 text-slate-400">{new Date(t.created_at).toLocaleDateString()}</td>
+                  <tr key={t.id} className="hover:bg-theme-input/50">
+                    <td className="p-3 font-bold text-theme-main">{t.human_readable_id || t.id.substring(0, 8)}</td>
+                    <td className="p-3 text-theme-muted">{new Date(t.created_at).toLocaleDateString()}</td>
                     <td className="p-3">{t.line?.name || 'Line'}</td>
-                    <td className="p-3 text-slate-200">{t.defect_category?.name || 'Category'}</td>
+                    <td className="p-3 text-theme-main">{t.defect_category?.name || 'Category'}</td>
                     <td className="p-3 uppercase text-[#F59E0B]">{t.severity}</td>
                     <td className="p-3 uppercase">{t.status}</td>
                   </tr>

@@ -104,10 +104,10 @@ export default function TaxonomyPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
           <div>
-            <h1 className="font-space font-bold text-2xl text-slate-100 tracking-wide">
+            <h1 className="font-space font-bold text-2xl text-theme-main tracking-wide">
               DEFECT TAXONOMY MASTER
             </h1>
-            <p className="text-xs text-slate-400 font-mono mt-1">
+            <p className="text-xs text-theme-muted font-mono mt-1">
               Configure standardized defect categories and failure guidelines
             </p>
           </div>
@@ -121,23 +121,23 @@ export default function TaxonomyPage() {
         </div>
 
         {/* Filter Controls */}
-        <div className="bg-[#131B2E] border border-[#1E293B] p-4 rounded-xl">
+        <div className="bg-theme-card border border-theme p-4 rounded-xl">
           <div className="relative max-w-md">
-            <Search size={18} className="absolute left-3.5 top-3 text-slate-500" />
+            <Search size={18} className="absolute left-3.5 top-3 text-theme-muted" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search taxonomy by title or description..."
-              className="w-full bg-[#0B0F19] border border-[#1E293B] focus:border-[#F59E0B] rounded-lg pl-10 pr-4 py-2 text-sm text-slate-100 placeholder-slate-600 focus:outline-none"
+              className="w-full bg-theme-input border border-theme focus:border-[#F59E0B] rounded-lg pl-10 pr-4 py-2 text-sm text-theme-main placeholder-theme-muted focus:outline-none"
             />
           </div>
         </div>
 
         {/* Table */}
-        <div className="bg-[#131B2E] border border-[#1E293B] rounded-xl overflow-hidden shadow-xl">
-          <table className="w-full text-left text-sm text-slate-300">
-            <thead className="bg-[#0B0F19] text-xs font-mono uppercase text-slate-400 border-b border-[#1E293B]">
+        <div className="bg-theme-card border border-theme rounded-xl overflow-hidden shadow-xl">
+          <table className="w-full text-left text-sm text-theme-main">
+            <thead className="bg-theme-table-header text-xs font-mono uppercase text-theme-muted border-b border-theme">
               <tr>
                 <th className="px-6 py-3.5">Category Title</th>
                 <th className="px-6 py-3.5">Description & Guidelines</th>
@@ -145,37 +145,37 @@ export default function TaxonomyPage() {
                 <th className="px-6 py-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#1E293B]">
+            <tbody className="divide-y divide-theme">
               {loading ? (
                 <tr>
-                  <td colSpan={4} className="text-center py-8 text-xs font-mono text-slate-500">
+                  <td colSpan={4} className="text-center py-8 text-xs font-mono text-theme-muted">
                     Loading taxonomy categories...
                   </td>
                 </tr>
               ) : filteredCategories.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="text-center py-8 text-xs font-mono text-slate-500">
+                  <td colSpan={4} className="text-center py-8 text-xs font-mono text-theme-muted">
                     No taxonomy records found.
                   </td>
                 </tr>
               ) : (
                 filteredCategories.map((c) => (
-                  <tr key={c.id} className="hover:bg-[#1E293B]/40">
-                    <td className="px-6 py-4 font-semibold text-slate-100 flex items-center gap-2">
+                  <tr key={c.id} className="hover:bg-theme-input/50">
+                    <td className="px-6 py-4 font-semibold text-theme-main flex items-center gap-2">
                       <Tag size={16} className="text-[#F59E0B]" />
                       <span>{c.name}</span>
                     </td>
-                    <td className="px-6 py-4 text-xs text-slate-400 max-w-md">
+                    <td className="px-6 py-4 text-xs text-theme-muted max-w-md">
                       {c.description || 'No description guidelines specified.'}
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-mono rounded-full ${c.active ? 'bg-emerald-950/40 text-emerald-400 border border-emerald-800/40' : 'bg-red-950/40 text-red-400 border border-red-800/40'}`}>
+                      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-mono rounded-full ${c.active ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/30' : 'bg-red-500/10 text-red-500 border border-red-500/30'}`}>
                         {c.active ? <Check size={12} /> : <X size={12} />}
                         <span>{c.active ? 'Active' : 'Disabled'}</span>
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button onClick={() => openModal(c)} className="p-1.5 text-slate-400 hover:text-[#F59E0B]">
+                      <button onClick={() => openModal(c)} className="p-1.5 text-theme-muted hover:text-[#F59E0B]">
                         <Edit2 size={16} />
                       </button>
                     </td>
@@ -189,32 +189,32 @@ export default function TaxonomyPage() {
         {/* Modal */}
         {isModalOpen && (
           <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-[#131B2E] border border-[#1E293B] w-full max-w-md rounded-xl p-6 space-y-4">
-              <h2 className="font-space font-bold text-lg text-slate-100">
+            <div className="bg-theme-card border border-theme w-full max-w-md rounded-xl p-6 space-y-4 shadow-2xl">
+              <h2 className="font-space font-bold text-lg text-theme-main">
                 {selectedCat ? 'Edit Defect Category' : 'Add New Defect Category'}
               </h2>
 
               <form onSubmit={handleSave} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-mono text-slate-400 mb-1 uppercase">Category Title</label>
+                  <label className="block text-xs font-mono text-theme-muted mb-1 uppercase">Category Title</label>
                   <input
                     type="text"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g. Hydraulic Seepage"
-                    className="w-full bg-[#0B0F19] border border-[#1E293B] focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none"
+                    className="w-full bg-theme-input border border-theme focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-theme-main focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono text-slate-400 mb-1 uppercase">Description & Inspection Guidelines</label>
+                  <label className="block text-xs font-mono text-theme-muted mb-1 uppercase">Description & Inspection Guidelines</label>
                   <textarea
                     rows={3}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Describe failure symptoms and inspection criteria..."
-                    className="w-full bg-[#0B0F19] border border-[#1E293B] focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none"
+                    className="w-full bg-theme-input border border-theme focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-theme-main focus:outline-none"
                   />
                 </div>
 
@@ -224,18 +224,18 @@ export default function TaxonomyPage() {
                     id="activeCatToggle"
                     checked={active}
                     onChange={(e) => setActive(e.target.checked)}
-                    className="rounded border-[#1E293B] bg-[#0B0F19] text-[#F59E0B]"
+                    className="rounded border-theme bg-theme-input text-[#F59E0B]"
                   />
-                  <label htmlFor="activeCatToggle" className="text-sm text-slate-200">
+                  <label htmlFor="activeCatToggle" className="text-sm text-theme-main">
                     Category Active & Available in Mobile App
                   </label>
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4 border-t border-[#1E293B]">
+                <div className="flex justify-end gap-3 pt-4 border-t border-theme">
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
-                    className="px-4 py-2 bg-[#1E293B] text-slate-300 text-sm font-medium rounded-lg"
+                    className="px-4 py-2 bg-theme-input text-theme-main text-sm font-medium rounded-lg hover:bg-theme-main"
                   >
                     Cancel
                   </button>

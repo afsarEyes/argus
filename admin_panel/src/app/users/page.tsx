@@ -105,7 +105,6 @@ export default function UsersMasterPage() {
 
     try {
       if (selectedUser?.id) {
-        // Update Existing User
         const { error } = await supabase
           .from('users')
           .update({
@@ -121,7 +120,6 @@ export default function UsersMasterPage() {
 
         if (error) throw error;
       } else {
-        // Create New User via Auth Signup
         const { data: authData, error: authError } = await supabase.auth.signUp({
           email: formEmail,
           password: formPassword,
@@ -172,10 +170,10 @@ export default function UsersMasterPage() {
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
           <div>
-            <h1 className="font-space font-bold text-2xl text-slate-100 tracking-wide">
+            <h1 className="font-space font-bold text-2xl text-theme-main tracking-wide">
               USERS & STAFF MASTER
             </h1>
-            <p className="text-xs text-slate-400 font-mono mt-1">
+            <p className="text-xs text-theme-muted font-mono mt-1">
               Manage operators, department leads, supervisors, and administrative credentials
             </p>
           </div>
@@ -189,23 +187,23 @@ export default function UsersMasterPage() {
         </div>
 
         {/* Filter Controls */}
-        <div className="bg-[#131B2E] border border-[#1E293B] p-4 rounded-xl flex flex-col md:flex-row gap-4 justify-between">
+        <div className="bg-theme-card border border-theme p-4 rounded-xl flex flex-col md:flex-row gap-4 justify-between">
           <div className="relative flex-1">
-            <Search size={18} className="absolute left-3.5 top-3 text-slate-500" />
+            <Search size={18} className="absolute left-3.5 top-3 text-theme-muted" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search user by name or email address..."
-              className="w-full bg-[#0B0F19] border border-[#1E293B] focus:border-[#F59E0B] rounded-lg pl-10 pr-4 py-2 text-sm text-slate-100 placeholder-slate-600 focus:outline-none"
+              className="w-full bg-theme-input border border-theme focus:border-[#F59E0B] rounded-lg pl-10 pr-4 py-2 text-sm text-theme-main placeholder-theme-muted focus:outline-none"
             />
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono text-slate-400">ROLE:</span>
+            <span className="text-xs font-mono text-theme-muted">ROLE:</span>
             <select
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
-              className="bg-[#0B0F19] border border-[#1E293B] focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none"
+              className="bg-theme-input border border-theme focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-theme-main focus:outline-none"
             >
               <option value="ALL">All Roles</option>
               <option value="staff">Staff (Operator)</option>
@@ -218,10 +216,10 @@ export default function UsersMasterPage() {
         </div>
 
         {/* Users Table */}
-        <div className="bg-[#131B2E] border border-[#1E293B] rounded-xl overflow-hidden shadow-xl">
+        <div className="bg-theme-card border border-theme rounded-xl overflow-hidden shadow-xl">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-300">
-              <thead className="bg-[#0B0F19] text-xs font-mono uppercase text-slate-400 border-b border-[#1E293B]">
+            <table className="w-full text-left text-sm text-theme-main">
+              <thead className="bg-theme-table-header text-xs font-mono uppercase text-theme-muted border-b border-theme">
                 <tr>
                   <th className="px-6 py-3.5">User Profile</th>
                   <th className="px-6 py-3.5">Role</th>
@@ -230,16 +228,16 @@ export default function UsersMasterPage() {
                   <th className="px-6 py-3.5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#1E293B]">
+              <tbody className="divide-y divide-theme">
                 {loading ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-8 text-xs font-mono text-slate-500">
+                    <td colSpan={5} className="text-center py-8 text-xs font-mono text-theme-muted">
                       Loading user directory...
                     </td>
                   </tr>
                 ) : filteredUsers.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-8 text-xs font-mono text-slate-500">
+                    <td colSpan={5} className="text-center py-8 text-xs font-mono text-theme-muted">
                       No matching user accounts found.
                     </td>
                   </tr>
@@ -247,15 +245,15 @@ export default function UsersMasterPage() {
                   filteredUsers.map((u) => {
                     const line = lines.find((l) => l.id === u.line_id);
                     return (
-                      <tr key={u.id} className="hover:bg-[#1E293B]/40 transition-colors">
+                      <tr key={u.id} className="hover:bg-theme-input/50 transition-colors">
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 bg-[#1E293B] rounded-full flex items-center justify-center text-[#F59E0B] font-bold">
+                            <div className="w-9 h-9 bg-theme-input border border-theme rounded-full flex items-center justify-center text-[#F59E0B] font-bold">
                               {u.name.charAt(0).toUpperCase()}
                             </div>
                             <div>
-                              <p className="font-semibold text-slate-100">{u.name}</p>
-                              <p className="text-xs text-slate-400 font-mono">{u.email}</p>
+                              <p className="font-semibold text-theme-main">{u.name}</p>
+                              <p className="text-xs text-theme-muted font-mono">{u.email}</p>
                             </div>
                           </div>
                         </td>
@@ -263,14 +261,14 @@ export default function UsersMasterPage() {
                           <span
                             className={`inline-block px-2.5 py-1 text-xs font-mono font-bold uppercase rounded border ${
                               u.role === 'admin'
-                                ? 'bg-purple-950/50 border-purple-800 text-purple-300'
+                                ? 'bg-purple-500/10 border-purple-500/30 text-purple-500'
                                 : u.role === 'quality_manager'
-                                ? 'bg-emerald-950/50 border-emerald-800 text-emerald-300'
+                                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500'
                                 : u.role === 'supervisor'
-                                ? 'bg-blue-950/50 border-blue-800 text-blue-300'
+                                ? 'bg-blue-500/10 border-blue-500/30 text-blue-500'
                                 : u.role === 'line_owner'
                                 ? 'bg-[#F59E0B]/10 border-[#F59E0B]/30 text-[#F59E0B]'
-                                : 'bg-slate-800 border-slate-700 text-slate-300'
+                                : 'bg-slate-500/10 border-slate-500/30 text-slate-400'
                             }`}
                           >
                             {u.role.replace('_', ' ')}
@@ -278,12 +276,12 @@ export default function UsersMasterPage() {
                         </td>
                         <td className="px-6 py-4 text-xs font-mono">
                           {line ? line.name : 'Global / Unassigned'}
-                          {u.shift && <span className="ml-2 px-1.5 py-0.5 bg-[#0B0F19] rounded border border-slate-700 text-slate-400">Shift {u.shift}</span>}
+                          {u.shift && <span className="ml-2 px-1.5 py-0.5 bg-theme-input rounded border border-theme text-theme-muted">Shift {u.shift}</span>}
                         </td>
                         <td className="px-6 py-4">
                           <span
                             className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-mono rounded-full ${
-                              u.is_active ? 'bg-emerald-950/40 text-emerald-400 border border-emerald-800/40' : 'bg-red-950/40 text-red-400 border border-red-800/40'
+                              u.is_active ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/30' : 'bg-red-500/10 text-red-500 border border-red-500/30'
                             }`}
                           >
                             {u.is_active ? <Check size={12} /> : <X size={12} />}
@@ -293,7 +291,7 @@ export default function UsersMasterPage() {
                         <td className="px-6 py-4 text-right">
                           <button
                             onClick={() => openEditModal(u)}
-                            className="p-1.5 text-slate-400 hover:text-[#F59E0B] hover:bg-[#1E293B] rounded transition-colors"
+                            className="p-1.5 text-theme-muted hover:text-[#F59E0B] hover:bg-theme-input rounded transition-colors"
                           >
                             <Edit2 size={16} />
                           </button>
@@ -310,12 +308,12 @@ export default function UsersMasterPage() {
         {/* Modal Dialog */}
         {isModalOpen && (
           <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-[#131B2E] border border-[#1E293B] w-full max-w-lg rounded-xl shadow-2xl p-6 space-y-6">
-              <div className="flex items-center justify-between border-b border-[#1E293B] pb-4">
-                <h2 className="font-space font-bold text-lg text-slate-100">
+            <div className="bg-theme-card border border-theme w-full max-w-lg rounded-xl shadow-2xl p-6 space-y-6">
+              <div className="flex items-center justify-between border-b border-theme pb-4">
+                <h2 className="font-space font-bold text-lg text-theme-main">
                   {selectedUser ? 'Edit User Profile' : 'Add New Staff Credentials'}
                 </h2>
-                <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-200">
+                <button onClick={() => setIsModalOpen(false)} className="text-theme-muted hover:text-theme-main">
                   <X size={20} />
                 </button>
               </div>
@@ -323,50 +321,50 @@ export default function UsersMasterPage() {
               <form onSubmit={handleSave} className="space-y-4">
                 {!selectedUser && (
                   <div>
-                    <label className="block text-xs font-mono text-slate-400 mb-1 uppercase">Email Address</label>
+                    <label className="block text-xs font-mono text-theme-muted mb-1 uppercase">Email Address</label>
                     <input
                       type="email"
                       required
                       value={formEmail}
                       onChange={(e) => setFormEmail(e.target.value)}
                       placeholder="operator@signode.com"
-                      className="w-full bg-[#0B0F19] border border-[#1E293B] focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none"
+                      className="w-full bg-theme-input border border-theme focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-theme-main focus:outline-none"
                     />
                   </div>
                 )}
 
                 <div>
-                  <label className="block text-xs font-mono text-slate-400 mb-1 uppercase">Full Name</label>
+                  <label className="block text-xs font-mono text-theme-muted mb-1 uppercase">Full Name</label>
                   <input
                     type="text"
                     required
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
                     placeholder="e.g. Ramesh Kumar"
-                    className="w-full bg-[#0B0F19] border border-[#1E293B] focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none"
+                    className="w-full bg-theme-input border border-theme focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-theme-main focus:outline-none"
                   />
                 </div>
 
                 {!selectedUser && (
                   <div>
-                    <label className="block text-xs font-mono text-slate-400 mb-1 uppercase">Initial Password</label>
+                    <label className="block text-xs font-mono text-theme-muted mb-1 uppercase">Initial Password</label>
                     <input
                       type="text"
                       required
                       value={formPassword}
                       onChange={(e) => setFormPassword(e.target.value)}
-                      className="w-full bg-[#0B0F19] border border-[#1E293B] focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm font-mono text-slate-100 focus:outline-none"
+                      className="w-full bg-theme-input border border-theme focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm font-mono text-theme-main focus:outline-none"
                     />
                   </div>
                 )}
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-mono text-slate-400 mb-1 uppercase">Role</label>
+                    <label className="block text-xs font-mono text-theme-muted mb-1 uppercase">Role</label>
                     <select
                       value={formRole}
                       onChange={(e) => setFormRole(e.target.value as UserRole)}
-                      className="w-full bg-[#0B0F19] border border-[#1E293B] focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none"
+                      className="w-full bg-theme-input border border-theme focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-theme-main focus:outline-none"
                     >
                       <option value="staff">Staff (Operator)</option>
                       <option value="line_owner">Line Owner</option>
@@ -377,11 +375,11 @@ export default function UsersMasterPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono text-slate-400 mb-1 uppercase">Shift Window</label>
+                    <label className="block text-xs font-mono text-theme-muted mb-1 uppercase">Shift Window</label>
                     <select
                       value={formShift}
                       onChange={(e) => setFormShift(e.target.value as 'A' | 'B' | 'C' | '')}
-                      className="w-full bg-[#0B0F19] border border-[#1E293B] focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none"
+                      className="w-full bg-theme-input border border-theme focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-theme-main focus:outline-none"
                     >
                       <option value="">Global / Unassigned</option>
                       <option value="A">Shift A</option>
@@ -392,11 +390,11 @@ export default function UsersMasterPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono text-slate-400 mb-1 uppercase">Assigned Line</label>
+                  <label className="block text-xs font-mono text-theme-muted mb-1 uppercase">Assigned Line</label>
                   <select
                     value={formLineId}
                     onChange={(e) => setFormLineId(e.target.value)}
-                    className="w-full bg-[#0B0F19] border border-[#1E293B] focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none"
+                    className="w-full bg-theme-input border border-theme focus:border-[#F59E0B] rounded-lg px-3 py-2 text-sm text-theme-main focus:outline-none"
                   >
                     <option value="">All Lines / Global</option>
                     {lines.map((l) => (
@@ -413,18 +411,18 @@ export default function UsersMasterPage() {
                     id="isActive"
                     checked={formIsActive}
                     onChange={(e) => setFormIsActive(e.target.checked)}
-                    className="rounded border-[#1E293B] bg-[#0B0F19] text-[#F59E0B] focus:ring-0"
+                    className="rounded border-theme bg-theme-input text-[#F59E0B] focus:ring-0"
                   />
-                  <label htmlFor="isActive" className="text-sm text-slate-200">
+                  <label htmlFor="isActive" className="text-sm text-theme-main">
                     Account Active & Enabled
                   </label>
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4 border-t border-[#1E293B]">
+                <div className="flex justify-end gap-3 pt-4 border-t border-theme">
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
-                    className="px-4 py-2 bg-[#1E293B] text-slate-300 text-sm font-medium rounded-lg hover:bg-[#1E293B]/80"
+                    className="px-4 py-2 bg-theme-input text-theme-main text-sm font-medium rounded-lg hover:bg-theme-main"
                   >
                     Cancel
                   </button>

@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { ShieldCheck, Lock, Mail, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { ShieldCheck, Lock, Mail, Eye, EyeOff, AlertCircle, Sun, Moon } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { useTheme } from '@/context/ThemeContext';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -12,6 +13,7 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  const { theme, toggleTheme } = useTheme();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -56,22 +58,30 @@ function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-md bg-[#131B2E] border border-[#1E293B] rounded-xl shadow-2xl p-8">
+    <div className="w-full max-w-md bg-theme-card border border-theme rounded-xl shadow-2xl p-8 transition-colors relative">
+      <button
+        onClick={toggleTheme}
+        className="absolute top-4 right-4 p-2 bg-theme-input text-[#F59E0B] rounded-lg border border-theme hover:bg-theme-main transition-colors"
+        title="Toggle Light/Dark Theme"
+      >
+        {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+      </button>
+
       {/* Brand Header */}
       <div className="flex flex-col items-center text-center mb-8">
         <div className="p-3 bg-[#F59E0B]/10 border border-[#F59E0B]/30 rounded-xl text-[#F59E0B] mb-3">
           <ShieldCheck size={36} />
         </div>
-        <h1 className="font-space font-bold text-2xl text-slate-100 tracking-wider">
+        <h1 className="font-space font-bold text-2xl text-theme-main tracking-wider">
           ARGUS <span className="text-[#F59E0B]">{'//'}</span> CONTROL
         </h1>
-        <p className="text-xs text-slate-400 font-mono mt-1">QC MANAGEMENT & ADMIN PORTAL</p>
+        <p className="text-xs text-theme-muted font-mono mt-1">QC MANAGEMENT & ADMIN PORTAL</p>
       </div>
 
       {/* Error Alert */}
       {errorMsg && (
-        <div className="mb-6 p-4 bg-red-950/40 border border-red-800/50 rounded-lg flex items-start gap-3 text-red-200 text-sm">
-          <AlertCircle size={20} className="text-red-400 shrink-0 mt-0.5" />
+        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg flex items-start gap-3 text-red-500 text-sm">
+          <AlertCircle size={20} className="shrink-0 mt-0.5" />
           <div>{errorMsg}</div>
         </div>
       )}
@@ -79,40 +89,40 @@ function LoginForm() {
       {/* Login Form */}
       <form onSubmit={handleLogin} className="space-y-5">
         <div>
-          <label className="block text-xs font-mono font-medium text-slate-300 mb-2 uppercase">
+          <label className="block text-xs font-mono font-medium text-theme-muted mb-2 uppercase">
             Plant Email Address
           </label>
           <div className="relative">
-            <Mail className="absolute left-3.5 top-3 text-slate-500" size={18} />
+            <Mail className="absolute left-3.5 top-3 text-theme-muted" size={18} />
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@signode.com"
-              className="w-full bg-[#0B0F19] border border-[#1E293B] focus:border-[#F59E0B] rounded-lg pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none transition-colors"
+              className="w-full bg-theme-input border border-theme focus:border-[#F59E0B] rounded-lg pl-10 pr-4 py-2.5 text-sm text-theme-main placeholder-theme-muted focus:outline-none transition-colors"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-mono font-medium text-slate-300 mb-2 uppercase">
+          <label className="block text-xs font-mono font-medium text-theme-muted mb-2 uppercase">
             Security Password
           </label>
           <div className="relative">
-            <Lock className="absolute left-3.5 top-3 text-slate-500" size={18} />
+            <Lock className="absolute left-3.5 top-3 text-theme-muted" size={18} />
             <input
               type={showPassword ? 'text' : 'password'}
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-[#0B0F19] border border-[#1E293B] focus:border-[#F59E0B] rounded-lg pl-10 pr-10 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none transition-colors"
+              className="w-full bg-theme-input border border-theme focus:border-[#F59E0B] rounded-lg pl-10 pr-4 py-2.5 text-sm text-theme-main placeholder-theme-muted focus:outline-none transition-colors"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3.5 top-3 text-slate-500 hover:text-slate-300 transition-colors"
+              className="absolute right-3.5 top-3 text-theme-muted hover:text-theme-main transition-colors"
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
@@ -133,8 +143,8 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen w-screen bg-[#0B0F19] flex items-center justify-center p-4">
-      <Suspense fallback={<div className="text-slate-400 font-mono text-sm">Loading Login Portal...</div>}>
+    <div className="min-h-screen w-screen bg-theme-main flex items-center justify-center p-4 transition-colors">
+      <Suspense fallback={<div className="text-theme-muted font-mono text-sm">Loading Login Portal...</div>}>
         <LoginForm />
       </Suspense>
     </div>

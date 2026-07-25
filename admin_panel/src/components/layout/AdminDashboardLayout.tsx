@@ -10,9 +10,9 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
 
   if (loading) {
     return (
-      <div className="h-screen w-screen bg-[#0B0F19] flex flex-col items-center justify-center gap-4">
+      <div className="h-screen w-screen bg-theme-main flex flex-col items-center justify-center gap-4">
         <div className="w-10 h-10 border-4 border-[#F59E0B] border-t-transparent rounded-full animate-spin"></div>
-        <p className="font-mono text-sm text-slate-400">Authenticating Argus Admin Session...</p>
+        <p className="font-mono text-sm text-theme-muted">Authenticating Argus Admin Session...</p>
       </div>
     );
   }
@@ -22,7 +22,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
   }
 
   return (
-    <div className="flex min-h-screen bg-[#0B0F19]">
+    <div className="flex min-h-screen bg-theme-main text-theme-main transition-colors">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0">
         <Header />
