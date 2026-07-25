@@ -124,3 +124,27 @@ export interface NotificationLog {
   channel: 'push' | 'email' | 'in_app';
   created_at: string;
 }
+
+export interface DailyReport {
+  id: string;
+  report_date: string;
+  shift: 'A' | 'B' | 'C' | 'ALL';
+  plant_id?: string;
+  line_id?: string;
+  author_id?: string;
+  total_tickets_logged: number;
+  total_tickets_resolved: number;
+  sla_breached_count: number;
+  critical_issues_count: number;
+  mttr_minutes: number;
+  top_defect_category?: string;
+  executive_summary?: string;
+  key_root_causes?: string;
+  preventative_actions?: string;
+  status: 'draft' | 'submitted' | 'approved';
+  created_at: string;
+  updated_at: string;
+  author?: UserProfile;
+  plant?: Plant;
+  line?: Line;
+}

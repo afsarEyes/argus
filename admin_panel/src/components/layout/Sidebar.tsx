@@ -12,6 +12,7 @@ import {
   GitMerge,
   Clock,
   FileSpreadsheet,
+  FileCheck2,
   Bell,
   ShieldCheck,
   LogOut,
@@ -21,6 +22,7 @@ import { useAuth } from '@/context/AuthContext';
 const NAV_ITEMS = [
   { label: 'Dashboard Overview', href: '/', icon: LayoutDashboard },
   { label: 'Live Ticket Auditor', href: '/tickets', icon: Ticket },
+  { label: 'Daily Quality Reports', href: '/daily-reports', icon: FileCheck2 },
   { label: 'Users & Staff Master', href: '/users', icon: Users },
   { label: 'Plant Layout Master', href: '/layout-master', icon: Factory },
   { label: 'Taxonomy Master', href: '/taxonomy', icon: Tag },
