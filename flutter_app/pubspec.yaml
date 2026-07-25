@@ -1,0 +1,11 @@
+name: argus_workspace
+publish_to: 'none'
+
+environment:
+  sdk: '^3.11.0'
+
+workspace:
+  - apps/mobile
+  - apps/console
+  - packages/argus_ui
+  - packages/argus_core
