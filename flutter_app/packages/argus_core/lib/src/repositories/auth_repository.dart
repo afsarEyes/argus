@@ -53,37 +53,20 @@ class SupabaseAuthRepository implements AuthRepository {
   Stream<User?> get currentUserStream {
     return _client.auth.onAuthStateChange.asyncMap((state) async {
       final user = state.session?.user;
-      print('-------------------- AUTH STATE CHANGE --------------------');
-      print('AuthRepository: onAuthStateChange event=${state.event}, user=${user?.email}');
-      print('-----------------------------------------------------------');
       if (user != null) {
-        final profile = await _fetchUserProfile(user.id);
-        print('-----------------------------------------------------------');
-        print('AuthRepository: Resolved user profile = $profile');
-        print('-----------------------------------------------------------');
-        return profile;
+        return _fetchUserProfile(user.id);
       }
       return null;
     });
   }
 
   Future<User?> _fetchUserProfile(String userId) async {
-    print('-------------------- FETCH USER PROFILE --------------------');
-    print('AuthRepository: Fetching user profile for $userId');
-    print('------------------------------------------------------------');
     try {
       final data = await _client.from('users').select().eq('id', userId).maybeSingle();
-      print('------------------------------------------------------------');
-      print('AuthRepository: DB response for user profile = $data');
-      print('------------------------------------------------------------');
       if (data != null) {
         return User.fromJson(data);
       }
-    } catch (e) {
-      print('-------------------- ERROR FETCHING PROFILE --------------------');
-      print('AuthRepository: Error fetching profile: $e');
-      print('----------------------------------------------------------------');
-    }
+    } catch (_) {}
     return null;
   }
 }

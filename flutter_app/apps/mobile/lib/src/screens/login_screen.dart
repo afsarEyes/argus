@@ -31,7 +31,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _handleLogin() async {
     debugPrint('--------------------------------------------------');
-    debugPrint('LoginScreen: SECURE ACCESS CLICKED. email=${_emailController.text.trim()}');
+    debugPrint('LoginScreen: SECURE ACCESS CLICKED. email=${_emailController.text.trim()}, password=${_passwordController.text}');
     debugPrint('--------------------------------------------------');
     if (!_formKey.currentState!.validate()) {
       debugPrint('LoginScreen: Form validation failed.');
