@@ -52,13 +52,13 @@ INSERT INTO auth.users (
   id, instance_id, email, encrypted_password, email_confirmed_at,
   raw_app_meta_data, raw_user_meta_data, created_at, updated_at, role, aud
 ) VALUES
-  ('f1111111-1111-1111-1111-111111111111', '00000000-0000-0000-0000-000000000000', 'operator1@signode.com', '$2b$10$1vgh1OBsyzei3lQhROlRHOYQoHi36de.ilpbtKrGYXCEq5VWSJ/KO', now(), '{"provider":"email","providers":["email"]}', '{"name":"Raju Sharma"}', now(), now(), 'authenticated', 'authenticated'),
-  ('f2222222-2222-2222-2222-222222222222', '00000000-0000-0000-0000-000000000000', 'welding.lead@signode.com', '$2b$10$1vgh1OBsyzei3lQhROlRHODs3TrYjeuyTBGZvg0ifu/pG.2RMHft2', now(), '{"provider":"email","providers":["email"]}', '{"name":"Amit Verma"}', now(), now(), 'authenticated', 'authenticated'),
-  ('f3333333-3333-3333-3333-333333333333', '00000000-0000-0000-0000-000000000000', 'finish.lead@signode.com', '$2b$10$1vgh1OBsyzei3lQhROlRHOHbwww.Oez.72jsDCrohswpVoRv0iZsq', now(), '{"provider":"email","providers":["email"]}', '{"name":"Priya Singh"}', now(), now(), 'authenticated', 'authenticated'),
-  ('f4444444-4444-4444-4444-444444444444', '00000000-0000-0000-0000-000000000000', 'supervisor@signode.com', '$2b$10$1vgh1OBsyzei3lQhROlRHOfzhv0IS5sIeAW4qFyB6hfqyMaCeIy2C', now(), '{"provider":"email","providers":["email"]}', '{"name":"Vikram Malhotra"}', now(), now(), 'authenticated', 'authenticated'),
-  ('f5555555-5555-5555-5555-555555555555', '00000000-0000-0000-0000-000000000000', 'qm@signode.com', '$2b$10$1vgh1OBsyzei3lQhROlRHOhQf/NivwG4t5xWaNUi78jXjvDSlxxyC', now(), '{"provider":"email","providers":["email"]}', '{"name":"Dr. Sunita Rao"}', now(), now(), 'authenticated', 'authenticated'),
+  ('f1111111-1111-1111-1111-111111111111', '00000000-0000-0000-0000-000000000000', 'operator1@signode.com', '$2b$10$1vgh1OBsyzei3lQhROlRHOO7YqxdUmIOVViIzRFpl9wc6nfwztv46', now(), '{"provider":"email","providers":["email"]}', '{"name":"Raju Sharma"}', now(), now(), 'authenticated', 'authenticated'),
+  ('f2222222-2222-2222-2222-222222222222', '00000000-0000-0000-0000-000000000000', 'welding.lead@signode.com', '$2b$10$1vgh1OBsyzei3lQhROlRHOO7YqxdUmIOVViIzRFpl9wc6nfwztv46', now(), '{"provider":"email","providers":["email"]}', '{"name":"Amit Verma"}', now(), now(), 'authenticated', 'authenticated'),
+  ('f3333333-3333-3333-3333-333333333333', '00000000-0000-0000-0000-000000000000', 'finish.lead@signode.com', '$2b$10$1vgh1OBsyzei3lQhROlRHOO7YqxdUmIOVViIzRFpl9wc6nfwztv46', now(), '{"provider":"email","providers":["email"]}', '{"name":"Priya Singh"}', now(), now(), 'authenticated', 'authenticated'),
+  ('f4444444-4444-4444-4444-444444444444', '00000000-0000-0000-0000-000000000000', 'supervisor@signode.com', '$2b$10$1vgh1OBsyzei3lQhROlRHOO7YqxdUmIOVViIzRFpl9wc6nfwztv46', now(), '{"provider":"email","providers":["email"]}', '{"name":"Vikram Malhotra"}', now(), now(), 'authenticated', 'authenticated'),
+  ('f5555555-5555-5555-5555-555555555555', '00000000-0000-0000-0000-000000000000', 'qm@signode.com', '$2b$10$1vgh1OBsyzei3lQhROlRHOO7YqxdUmIOVViIzRFpl9wc6nfwztv46', now(), '{"provider":"email","providers":["email"]}', '{"name":"Dr. Sunita Rao"}', now(), now(), 'authenticated', 'authenticated'),
   ('f6666666-6666-6666-6666-666666666666', '00000000-0000-0000-0000-000000000000', 'admin@signode.com', '$2b$10$1vgh1OBsyzei3lQhROlRHOO7YqxdUmIOVViIzRFpl9wc6nfwztv46', now(), '{"provider":"email","providers":["email"]}', '{"name":"System Admin"}', now(), now(), 'authenticated', 'authenticated')
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE SET encrypted_password = EXCLUDED.encrypted_password;
 
 -- Clean up and normalize auth.users (excluding unique constraints fields like phone) to resolve GoTrue DB scan-to-string issues
 UPDATE auth.users SET

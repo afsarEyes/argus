@@ -14,12 +14,12 @@ void main() async {
 
   const supabaseUrl = String.fromEnvironment(
     'SUPABASE_URL',
-    defaultValue: 'http://127.0.0.1:54321',
+    defaultValue: 'https://prcgbbytixlaxuhmfurk.supabase.co',
   );
 
   const supabaseAnonKey = String.fromEnvironment(
     'SUPABASE_ANON_KEY',
-    defaultValue: 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH',
+    defaultValue: 'sb_publishable_9VXQPDYhY6rnKuuTyltApQ_bwMaphrY',
   );
 
   await Supabase.initialize(

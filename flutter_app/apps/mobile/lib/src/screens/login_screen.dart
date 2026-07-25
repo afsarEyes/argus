@@ -21,6 +21,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _isPinMode = false;
   final _pinController = TextEditingController();
 
+  bool _obscurePassword = true;
+  bool _obscurePin = true;
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -77,7 +80,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       debugPrint('LoginScreen: Caught error: $e');
       debugPrint('------------------------------------------------------------');
       setState(() {
-        _errorMessage = e.toString().replaceAll('Exception: ', '');
+        _errorMessage = _getCleanErrorMessage(e);
       });
     } finally {
       if (mounted) {
@@ -86,6 +89,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         });
       }
     }
+  }
+
+  String _getCleanErrorMessage(dynamic error) {
+    final errStr = error.toString().toLowerCase();
+    
+    if (errStr.contains('invalid_credentials') || errStr.contains('invalid login credentials')) {
+      return 'Invalid email address or security password. Please try again.';
+    }
+    if (errStr.contains('network') || errStr.contains('socket') || errStr.contains('connection refused') || errStr.contains('host lookup')) {
+      return 'Network connection error. Please check your internet connection and try again.';
+    }
+    if (errStr.contains('database error') || errStr.contains('querying schema')) {
+      return 'Database schema querying error. Please contact a system administrator.';
+    }
+    
+    return error.toString()
+        .replaceAll('Exception: ', '')
+        .replaceAll('AuthApiException', 'Auth Error')
+        .replaceAll('AuthRetryableFetchException', 'Connection Error');
   }
 
   @override
@@ -188,8 +210,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: colors.brandAccent),
                               ),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                                  color: colors.textSecondary,
+                                ),
+                                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                              ),
                             ),
-                            obscureText: true,
+                            obscureText: _obscurePassword,
                             validator: (value) => value == null || value.length < 6 
                                 ? 'Password must be at least 6 characters' 
                                 : null,
@@ -207,9 +236,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: colors.brandAccent),
                               ),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscurePin ? Icons.visibility_off : Icons.visibility,
+                                  color: colors.textSecondary,
+                                ),
+                                onPressed: () => setState(() => _obscurePin = !_obscurePin),
+                              ),
                             ),
                             keyboardType: TextInputType.number,
-                            obscureText: true,
+                            obscureText: _obscurePin,
                             maxLength: 4,
                             validator: (value) => value == null || value.length != 4 
                                 ? 'PIN must be exactly 4 digits' 
