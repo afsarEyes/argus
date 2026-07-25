@@ -27,15 +27,10 @@ class _FlagIssueScreenState extends ConsumerState<FlagIssueScreen> {
   bool _isOffline = false;
   bool _isSubmitting = false;
 
-  List<Line> _lines = [];
-  List<Station> _allStations = [];
-  List<DefectCategory> _categories = [];
-
   @override
   void initState() {
     super.initState();
     _checkConnectivity();
-    _loadMasterData();
     Connectivity().onConnectivityChanged.listen((results) {
       final hasConnection = results.any((r) => r != ConnectivityResult.none);
       if (mounted) {
@@ -60,25 +55,6 @@ class _FlagIssueScreenState extends ConsumerState<FlagIssueScreen> {
     });
   }
 
-  Future<void> _loadMasterData() async {
-    final repo = ref.read(masterDataRepositoryProvider);
-    try {
-      final lines = await repo.getLines();
-      final stations = await repo.getStations();
-      final categories = await repo.getDefectCategories();
-      setState(() {
-        _lines = lines;
-        _allStations = stations;
-        _categories = categories;
-      });
-    } catch (_) {}
-  }
-
-  List<Station> get _filteredStations {
-    if (_selectedLine == null) return [];
-    return _allStations.where((s) => s.lineId == _selectedLine!.id).toList();
-  }
-
   Future<void> _capturePhoto(bool fromCamera) async {
     HapticFeedback.lightImpact();
     final picker = ref.read(attachmentServiceProvider);
@@ -97,7 +73,7 @@ class _FlagIssueScreenState extends ConsumerState<FlagIssueScreen> {
     });
   }
 
-  void _showCategorySelector() {
+  void _showCategorySelector(List<DefectCategory> categories) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -107,7 +83,7 @@ class _FlagIssueScreenState extends ConsumerState<FlagIssueScreen> {
       ),
       builder: (context) {
         return _CategorySearchSheet(
-          categories: _categories,
+          categories: categories,
           onSelected: (cat) {
             setState(() {
               _selectedCategory = cat;
@@ -205,6 +181,37 @@ class _FlagIssueScreenState extends ConsumerState<FlagIssueScreen> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<ArgusColors>()!;
 
+    final linesAsync = ref.watch(linesListProvider);
+    final stationsAsync = ref.watch(stationsListProvider);
+    final categoriesAsync = ref.watch(defectCategoriesListProvider);
+
+    final lines = linesAsync.valueOrNull ?? [];
+    final allStations = stationsAsync.valueOrNull ?? [];
+    final categories = categoriesAsync.valueOrNull ?? [];
+
+    final filteredStations = _selectedLine == null
+        ? <Station>[]
+        : allStations.where((s) => s.lineId == _selectedLine!.id).toList();
+
+    // Safety checks to ensure selected references are updated to match the instances in the new list
+    final selLine = _selectedLine;
+    Line? selectedLine;
+    if (selLine != null && lines.isNotEmpty) {
+      final match = lines.firstWhere((l) => l.id == selLine.id, orElse: () => selLine);
+      if (lines.contains(match)) {
+        selectedLine = match;
+      }
+    }
+
+    final selStation = _selectedStation;
+    Station? selectedStation;
+    if (selStation != null && filteredStations.isNotEmpty) {
+      final match = filteredStations.firstWhere((s) => s.id == selStation.id, orElse: () => selStation);
+      if (filteredStations.contains(match)) {
+        selectedStation = match;
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -250,7 +257,8 @@ class _FlagIssueScreenState extends ConsumerState<FlagIssueScreen> {
                       children: [
                         Expanded(
                           child: DropdownButtonFormField<Line>(
-                            value: _selectedLine,
+                            value: selectedLine,
+                            isExpanded: true,
                             hint: Text('Select Line', style: TextStyle(color: colors.textSecondary)),
                             dropdownColor: colors.panelBackground,
                             decoration: InputDecoration(
@@ -259,10 +267,14 @@ class _FlagIssueScreenState extends ConsumerState<FlagIssueScreen> {
                               enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: colors.panelBorder)),
                               focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: colors.brandAccent)),
                             ),
-                            items: _lines.map((l) {
+                            items: lines.map((l) {
                               return DropdownMenuItem(
                                 value: l,
-                                child: Text(l.name, style: TextStyle(color: colors.textPrimary)),
+                                child: Text(
+                                  l.name,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: colors.textPrimary),
+                                ),
                               );
                             }).toList(),
                             onChanged: (val) {
@@ -276,7 +288,8 @@ class _FlagIssueScreenState extends ConsumerState<FlagIssueScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: DropdownButtonFormField<Station>(
-                            value: _selectedStation,
+                            value: selectedStation,
+                            isExpanded: true,
                             hint: Text('Select Station', style: TextStyle(color: colors.textSecondary)),
                             dropdownColor: colors.panelBackground,
                             decoration: InputDecoration(
@@ -285,10 +298,14 @@ class _FlagIssueScreenState extends ConsumerState<FlagIssueScreen> {
                               enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: colors.panelBorder)),
                               focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: colors.brandAccent)),
                             ),
-                            items: _filteredStations.map((s) {
+                            items: filteredStations.map((s) {
                               return DropdownMenuItem(
                                 value: s,
-                                child: Text(s.name, style: TextStyle(color: colors.textPrimary)),
+                                child: Text(
+                                  s.name,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: colors.textPrimary),
+                                ),
                               );
                             }).toList(),
                             onChanged: (val) {
@@ -304,7 +321,7 @@ class _FlagIssueScreenState extends ConsumerState<FlagIssueScreen> {
 
                     // Searchable Defect Category Button
                     InkWell(
-                      onTap: _showCategorySelector,
+                      onTap: () => _showCategorySelector(categories),
                       child: InputDecorator(
                         decoration: InputDecoration(
                           labelText: 'Defect Category',
@@ -315,13 +332,18 @@ class _FlagIssueScreenState extends ConsumerState<FlagIssueScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              _selectedCategory?.name ?? 'Search defect taxonomy...',
-                              style: TextStyle(
-                                color: _selectedCategory == null ? colors.textSecondary : colors.textPrimary,
-                                fontFamily: 'Inter',
+                            Expanded(
+                              child: Text(
+                                _selectedCategory?.name ?? 'Search defect taxonomy...',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: _selectedCategory == null ? colors.textSecondary : colors.textPrimary,
+                                  fontFamily: 'Inter',
+                                ),
                               ),
                             ),
+                            const SizedBox(width: 8),
                             Icon(Icons.search, color: colors.brandAccent),
                           ],
                         ),

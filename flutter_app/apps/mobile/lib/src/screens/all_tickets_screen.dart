@@ -319,12 +319,18 @@ class _AllTicketsScreenState extends ConsumerState<AllTicketsScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            '$lineName // $stationName'.toUpperCase(),
-                            style: TextStyle(fontFamily: 'JetBrainsMono', fontSize: 11, color: colors.textSecondary),
+                          Expanded(
+                            child: Text(
+                              '$lineName // $stationName'.toUpperCase(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontFamily: 'JetBrainsMono', fontSize: 11, color: colors.textSecondary),
+                            ),
                           ),
+                          const SizedBox(width: 8),
                           if (!isBreached && ticket.status != TicketStatus.resolved && ticket.status != TicketStatus.closed)
                             Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 const Icon(Icons.timer, size: 14, color: Colors.grey),
                                 const SizedBox(width: 4),

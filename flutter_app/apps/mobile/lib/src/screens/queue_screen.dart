@@ -286,17 +286,23 @@ class _TicketListFeed extends ConsumerWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            '$lineName // $stationName'.toUpperCase(),
-                            style: TextStyle(
-                              fontFamily: 'JetBrainsMono',
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                              color: Theme.of(context).extension<ArgusColors>()!.textSecondary,
+                          Expanded(
+                            child: Text(
+                              '$lineName // $stationName'.toUpperCase(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: 'JetBrainsMono',
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                                color: Theme.of(context).extension<ArgusColors>()!.textSecondary,
+                              ),
                             ),
                           ),
+                          const SizedBox(width: 8),
                           if (ticket.status != TicketStatus.resolved && ticket.status != TicketStatus.closed)
                             Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 const Icon(Icons.timer, size: 14, color: Colors.grey),
                                 const SizedBox(width: 4),
