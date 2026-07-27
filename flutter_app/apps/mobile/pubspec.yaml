@@ -23,6 +23,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.24
   connectivity_plus: ^6.0.5
   image_picker: ^1.1.2
+  path_provider: ^2.1.4
   camera: ^0.11.0
   flutter_riverpod: ^2.5.1
   supabase_flutter: ^2.8.0

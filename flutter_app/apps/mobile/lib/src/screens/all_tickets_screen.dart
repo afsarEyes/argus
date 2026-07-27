@@ -122,6 +122,7 @@ class _AllTicketsScreenState extends ConsumerState<AllTicketsScreen> {
                     Expanded(
                       child: DropdownButtonFormField<String?>(
                         value: _filters.lineId,
+                        isExpanded: true,
                         dropdownColor: colors.panelBackground,
                         decoration: InputDecoration(
                           labelText: 'Filter Line',
@@ -132,12 +133,12 @@ class _AllTicketsScreenState extends ConsumerState<AllTicketsScreen> {
                         items: [
                           DropdownMenuItem<String?>(
                             value: null,
-                            child: Text('All Lines', style: TextStyle(color: colors.textPrimary)),
+                            child: Text('All Lines', overflow: TextOverflow.ellipsis, style: TextStyle(color: colors.textPrimary)),
                           ),
                           ...lines.map((l) {
                             return DropdownMenuItem<String?>(
                               value: l.id,
-                              child: Text(l.name, style: TextStyle(color: colors.textPrimary)),
+                              child: Text(l.name, overflow: TextOverflow.ellipsis, style: TextStyle(color: colors.textPrimary)),
                             );
                           }),
                         ],
@@ -152,6 +153,7 @@ class _AllTicketsScreenState extends ConsumerState<AllTicketsScreen> {
                     Expanded(
                       child: DropdownButtonFormField<TicketStatus?>(
                         value: _filters.status,
+                        isExpanded: true,
                         dropdownColor: colors.panelBackground,
                         decoration: InputDecoration(
                           labelText: 'Filter Status',
@@ -162,12 +164,12 @@ class _AllTicketsScreenState extends ConsumerState<AllTicketsScreen> {
                         items: [
                           DropdownMenuItem<TicketStatus?>(
                             value: null,
-                            child: Text('All Statuses', style: TextStyle(color: colors.textPrimary)),
+                            child: Text('All Statuses', overflow: TextOverflow.ellipsis, style: TextStyle(color: colors.textPrimary)),
                           ),
                           ...TicketStatus.values.map((s) {
                             return DropdownMenuItem<TicketStatus?>(
                               value: s,
-                              child: Text(s.name.toUpperCase(), style: TextStyle(color: colors.textPrimary)),
+                              child: Text(s.name.toUpperCase(), overflow: TextOverflow.ellipsis, style: TextStyle(color: colors.textPrimary)),
                             );
                           }),
                         ],

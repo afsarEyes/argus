@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:argus_core/argus_core.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:drift/drift.dart';
@@ -26,7 +27,9 @@ class OfflineFirstTicketRepository implements TicketRepository {
         final remoteTickets = await remoteRepository.getTickets(lineId: lineId, status: status);
         return remoteTickets;
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('OfflineFirstTicketRepository: Error fetching remote tickets -> $e');
+    }
 
     // Fallback: Query all tickets from local Drift SQLite database
     final List<OfflineTicket> localData = await db.select(db.offlineTickets).get();
@@ -39,7 +42,7 @@ class OfflineFirstTicketRepository implements TicketRepository {
 
     return filtered.map((t) {
       return Ticket(
-        id: t.humanReadableId ?? t.id, // Fallback to local UUID if not synced yet
+        id: t.humanReadableId ?? t.id,
         reporterId: t.reporterId,
         lineId: t.lineId,
         stationId: t.stationId,
@@ -61,7 +64,6 @@ class OfflineFirstTicketRepository implements TicketRepository {
     final connectivity = await Connectivity().checkConnectivity();
     final hasConnection = connectivity.any((r) => r != ConnectivityResult.none);
 
-    // Generate local UUID for sync idempotency
     final localId = const Uuid().v4();
     final localTicket = ticket.copyWith(
       id: localId,
@@ -71,14 +73,18 @@ class OfflineFirstTicketRepository implements TicketRepository {
 
     if (hasConnection) {
       try {
+        debugPrint('OfflineFirstTicketRepository: Submitting to remote server...');
         final synced = await remoteRepository.createTicket(localTicket);
+        debugPrint('OfflineFirstTicketRepository: Remote submission SUCCESS -> ID: ${synced.id}');
         return synced;
-      } catch (_) {
-        // Fallback to local cache on insertion failure
+      } catch (e, stack) {
+        debugPrint('OfflineFirstTicketRepository: Remote submission EXCEPTION -> $e');
+        debugPrint('Stack: $stack');
+        rethrow;
       }
     }
 
-    // Save to local Drift SQLite database
+    // Save to local Drift SQLite database if offline
     await db.into(db.offlineTickets).insert(OfflineTicketsCompanion.insert(
           id: localId,
           reporterId: localTicket.reporterId,

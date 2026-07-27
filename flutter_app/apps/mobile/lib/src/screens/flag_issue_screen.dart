@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:argus_core/argus_core.dart';
 import 'package:argus_ui/argus_ui.dart';
+import 'package:go_router/go_router.dart';
 import '../providers/local_providers.dart';
 import '../routing/app_router.dart';
 
@@ -23,7 +24,7 @@ class _FlagIssueScreenState extends ConsumerState<FlagIssueScreen> {
   Station? _selectedStation;
   DefectCategory? _selectedCategory;
   TicketSeverity _selectedSeverity = TicketSeverity.minor;
-  List<String> _capturedPhotoPaths = [];
+  final List<String> _capturedPhotoPaths = [];
   bool _isOffline = false;
   bool _isSubmitting = false;
 
@@ -57,12 +58,32 @@ class _FlagIssueScreenState extends ConsumerState<FlagIssueScreen> {
 
   Future<void> _capturePhoto(bool fromCamera) async {
     HapticFeedback.lightImpact();
-    final picker = ref.read(attachmentServiceProvider);
-    final paths = await picker.capturePhotos(fromCamera: fromCamera);
-    if (paths.isNotEmpty) {
-      setState(() {
-        _capturedPhotoPaths.addAll(paths);
-      });
+    try {
+      final picker = ref.read(attachmentServiceProvider);
+      final paths = await picker.capturePhotos(fromCamera: fromCamera);
+      if (paths.isNotEmpty) {
+        if (mounted) {
+          setState(() {
+            _capturedPhotoPaths.addAll(paths);
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${paths.length} photo(s) saved to local storage.'),
+              duration: const Duration(seconds: 2),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Unable to attach image: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -140,8 +161,14 @@ class _FlagIssueScreenState extends ConsumerState<FlagIssueScreen> {
     );
 
     try {
+      debugPrint('================ FLAG ISSUE SUBMIT REQUEST ================');
+      debugPrint('Ticket: $ticket');
+
       final ticketRepo = ref.read(ticketRepositoryProvider);
-      await ticketRepo.createTicket(ticket);
+      final createdTicket = await ticketRepo.createTicket(ticket);
+
+      debugPrint('================ FLAG ISSUE SUBMIT SUCCESS ================');
+      debugPrint('Created Ticket ID: ${createdTicket.id}');
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -152,6 +179,7 @@ class _FlagIssueScreenState extends ConsumerState<FlagIssueScreen> {
             backgroundColor: _isOffline ? Colors.orange : Colors.green,
           ),
         );
+
         // Reset form
         setState(() {
           _selectedLine = null;
@@ -161,11 +189,21 @@ class _FlagIssueScreenState extends ConsumerState<FlagIssueScreen> {
           _capturedPhotoPaths.clear();
           _descriptionController.clear();
         });
+        if (mounted) {
+          context.go('/queue');
+        }
       }
-    } catch (e) {
+    } catch (e, stack) {
+      debugPrint('================ FLAG ISSUE SUBMIT EXCEPTION ================');
+      debugPrint('Exception: $e');
+      debugPrint('Stacktrace: $stack');
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text('Error submitting ticket: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {

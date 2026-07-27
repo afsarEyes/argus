@@ -411,9 +411,14 @@ class _TicketDetailScreenState extends ConsumerState<TicketDetailScreen> {
 
                   // Photos Gallery section
                   if (ticket.photos.isNotEmpty) ...[
-                    Text(
-                      'PHOTOS GALLERY',
-                      style: TextStyle(fontFamily: 'SpaceGrotesk', fontWeight: FontWeight.w700, fontSize: 12, color: colors.textSecondary),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'ATTACHED PHOTOS (${ticket.photos.length})',
+                          style: TextStyle(fontFamily: 'SpaceGrotesk', fontWeight: FontWeight.w700, fontSize: 12, color: colors.textSecondary),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 8),
                     SizedBox(
@@ -422,15 +427,48 @@ class _TicketDetailScreenState extends ConsumerState<TicketDetailScreen> {
                         scrollDirection: Axis.horizontal,
                         itemCount: ticket.photos.length,
                         itemBuilder: (context, index) {
-                          final p = ticket.photos[index];
-                          final isLocal = p.startsWith('/') || p.startsWith('file://');
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.all(Radius.circular(4)),
-                              child: isLocal
-                                  ? Image.file(File(p), width: 120, height: 120, fit: BoxFit.cover)
-                                  : Image.network(p, width: 120, height: 120, fit: BoxFit.cover),
+                          final path = ticket.photos[index];
+                          final cleanPath = path.replaceFirst('file://', '');
+                          final isLocal = cleanPath.startsWith('/') || cleanPath.contains('argus_attachments');
+
+                          Widget imageWidget;
+                          if (isLocal) {
+                            final file = File(cleanPath);
+                            if (file.existsSync()) {
+                              imageWidget = Image.file(
+                                file,
+                                width: 120,
+                                height: 120,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) => _buildImagePlaceholder(colors),
+                              );
+                            } else {
+                              imageWidget = _buildImagePlaceholder(colors);
+                            }
+                          } else {
+                            imageWidget = Image.network(
+                              path,
+                              width: 120,
+                              height: 120,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => _buildImagePlaceholder(colors),
+                            );
+                          }
+
+                          return GestureDetector(
+                            onTap: () => _showFullscreenImage(context, path),
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.all(Radius.circular(6)),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: colors.panelBorder),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: imageWidget,
+                                ),
+                              ),
                             ),
                           );
                         },
@@ -617,6 +655,51 @@ class _TicketDetailScreenState extends ConsumerState<TicketDetailScreen> {
               ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showFullscreenImage(BuildContext context, String path) {
+    final cleanPath = path.replaceFirst('file://', '');
+    final isLocal = cleanPath.startsWith('/') || cleanPath.contains('argus_attachments');
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.black,
+          insetPadding: const EdgeInsets.all(12),
+          child: Stack(
+            alignment: Alignment.topRight,
+            children: [
+              InteractiveViewer(
+                child: isLocal
+                    ? Image.file(File(cleanPath), fit: BoxFit.contain)
+                    : Image.network(path, fit: BoxFit.contain),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close, color: Colors.white, size: 28),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildImagePlaceholder(ArgusColors colors) {
+    return Container(
+      width: 120,
+      height: 120,
+      color: colors.panelBackground,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.broken_image, color: colors.textSecondary, size: 28),
+          const SizedBox(height: 4),
+          Text('Photo Unavailable', style: TextStyle(color: colors.textSecondary, fontSize: 10)),
+        ],
       ),
     );
   }
